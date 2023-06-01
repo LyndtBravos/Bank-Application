@@ -2,13 +2,15 @@ package com.greenhouse.bankApp;
 
 public class Transaction
 {
-	private String reference;
-	private double amount;
+	private final String reference;
+	private final double amount;
+	private final String status;
 
-	public Transaction(String reference, double amount)
+	public Transaction(String reference, double amount, String status)
 	{
 		this.reference = reference;
 		this.amount = amount;
+		this.status = status;
 	}
 
 	public String getReference()
@@ -21,19 +23,9 @@ public class Transaction
 		return amount;
 	}
 
-	public void setReference(String reference)
-	{
-		this.reference = reference;
-	}
-
-	public void setAmount(double amount)
-	{
-		this.amount = amount;
-	}
-
 	@Override
 	public String toString()
 	{
-		return "Transaction: " + "reference='" + reference + '\'' + ", amount=" + amount;
+		return "Transaction: " + "reference='" + reference + '\'' + ", amount=" + status + amount;
 	}
 }

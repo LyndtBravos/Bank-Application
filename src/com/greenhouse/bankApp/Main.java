@@ -3,9 +3,11 @@ package com.greenhouse.bankApp;
 public class Main
 {
 	public static void main(String[] args)	{
+		System.out.println("==============================================================================="
+							+ "\nBrian's Bank Project"
+							+ "\n============================================================================");
 		Bank bank = new Bank();
 		bank.createNewAccounts("Brian", "Mthembu", 981017, "0672570115", "47 Kent Avenue, Randburg, Johannesburg");
-		bank.printAllClients();
 
 		UserAccounts brian = bank.getClient(981017);
 		System.out.println();
@@ -22,12 +24,14 @@ public class Main
 		UserAccounts xolani = bank.getClient(981220);
 		brian.sendMoneyToAnotherCA(350, "Blesser", xolani.getCurrentAccount(), bank, brian.getCurrentAccount().getAccountNumber());
 
-		xolani = bank.getClient(981225);
-		try
-		{
-			brian.sendMoneyToAnotherCA(350, "Blesser", xolani.getCurrentAccount(), bank, brian.getCurrentAccount().getAccountNumber()); // Account doesn't exist
-		}catch(NullPointerException e){
-			System.out.println("Xolani's account doesn't exist on the system");
-		}
+		xolani = bank.getClient(981225); // Account doesn't exist
+
+		if(xolani != null)
+			brian.sendMoneyToAnotherCA(350, "Blesser", xolani.getCurrentAccount(), bank, brian.getCurrentAccount().getAccountNumber());
+
+		bank.printAllClients();
+		bank.getBankCustomers()
+				.forEach(UserAccounts::printAllTransactions);
+
 	}
 }

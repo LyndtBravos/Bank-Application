@@ -29,11 +29,8 @@ public class Bank{
 		CurrentAccount current = new CurrentAccount(firstName, lastName, idNumber, phoneNumber, address);
 		UserAccounts user = new UserAccounts(current,savings);
 		getBankCustomers().add(user);
-		return user;
-	}
-
-	public List<UserAccounts> getAllUsers(){
-		return bankCustomers;
+		System.out.println("\n\tHooray. New account created.\n");
+		return user; // can also be void
 	}
 
 	public UserAccounts findClient(String accountNumber){
@@ -67,7 +64,7 @@ public class Bank{
 			if(ts.getAmount() < client.getCurrentAccount().getBalance()){
 				client.getCurrentAccount().subtractFromBalance(ts.getAmount());
 				String ref = ts.getReference() + ": Debit Order Transaction by Bank Z for " + accountNumber;
-				client.getCurrentAccount().getTransactions().add(new Transaction(ref, ts.getAmount()));
+				client.getCurrentAccount().getTransactions().add(new Transaction(ref, ts.getAmount(), "-"));
 				System.out.println("Balance is now updated to: R" + df.format(client.getCurrentAccount().getBalance()));
 			}else System.out.println("Debit Order transaction bounced back due to low low balance");
 		}else
@@ -99,14 +96,14 @@ public class Bank{
 			if(client.getCurrentAccount().getBalance() > -5000){
 				client.getCurrentAccount().subtractFromBalance(ts.getAmount());
 				String ref = ts.getReference() + ": " + " Credit by Bank Z for " + accountNumber;
-				client.getCurrentAccount().getTransactions().add(new Transaction(ref, ts.getAmount()));
+				client.getCurrentAccount().getTransactions().add(new Transaction(ref, ts.getAmount(), "+"));
 				System.out.println("Balance is now updated to: R" + df.format(client.getCurrentAccount().getBalance()));
 			}else
 				System.out.println("You have exceeded your Credit Balance. Transaction failed.");
 		}else System.out.println("Bank Account Number is invalid, please try again");
 	}
 
-	public void performCreditTransaction(List<Transaction> transactions, List<String> accountNumbers){
+	public void performCreditTransactions(List<Transaction> transactions, List<String> accountNumbers){
 		UserAccounts client;
 		for(String accountNumber: accountNumbers){
 			client = findClient(accountNumber);
@@ -125,8 +122,10 @@ public class Bank{
 	}
 
 	public void printAllClients(){
-		for(UserAccounts user: getAllUsers()){
-			System.out.println(user.getCurrentAccount().toString());
+		System.out.println("\n");
+		for(UserAccounts user: getBankCustomers()){
+			System.out.println("\t -> " + user.getCurrentAccount().toString());
+			System.out.println("\t\t " + user.getSavingsAccount().toString() + "\n");
 		}
 	}
 

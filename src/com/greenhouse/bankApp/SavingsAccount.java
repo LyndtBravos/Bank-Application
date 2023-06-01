@@ -11,10 +11,15 @@ public class SavingsAccount {
 	private int idNumber;
 	private String phoneNumber;
 	private String accountNumber;
-	private List<Transaction> transactions = new ArrayList<>();
+	private List<Transaction> transactions;
 	private double balance;
 	private String address;
 	private DecimalFormat df = new DecimalFormat("0.00");
+
+	public UserAccounts getUserAccounts(Bank bank){
+		UserAccounts user = new UserAccounts().findWithSavingsAccount(this, bank);
+		return user;
+	}
 
 	public String getFirstName()
 	{
@@ -43,10 +48,7 @@ public class SavingsAccount {
 
 	public List<Transaction> getTransactions()
 	{
-		List<Transaction> list = transactions;
-		if(list == null || list.isEmpty())
-			list = new ArrayList<>();
-		return list;
+		return transactions;
 	}
 
 	public double getBalance()
@@ -79,7 +81,7 @@ public class SavingsAccount {
 	public SavingsAccount(String firstName, String lastName, int idNumber, String phoneNumber, String address)
 	{
 		this.firstName = firstName;
-		getTransactions().add(new Transaction("Joining Bonus", 500.00));
+		this.transactions = new ArrayList<>();
 		System.out.println("Welcome to Bank X, " + firstName + ". You've been credited with R500 as a joining bonus. Enjoy!");
 		this.lastName = lastName;
 		this.idNumber = idNumber;
@@ -87,11 +89,14 @@ public class SavingsAccount {
 		this.address = address;
 		this.balance = 500.00;
 		this.accountNumber = new Bank().generateAccountNumber("SA"); // SA for Savings Account
+		getTransactions().add(new Transaction("Joining Bonus", 500.00, "+"));
 		new CurrentAccount(firstName, lastName, idNumber, phoneNumber, address);
 	}
 
 	public void printTransactionsList(){
 		int i = 0;
+
+		System.out.println("For you: " + getFirstName() + " " + getLastName());
 		for (Transaction ts: getTransactions()){
 			i++;
 			System.out.println("Transaction " + i + ": " + ts.toString());

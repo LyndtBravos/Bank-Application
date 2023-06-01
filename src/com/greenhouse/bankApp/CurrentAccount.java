@@ -11,7 +11,7 @@ public class CurrentAccount {
 	private int idNumber;
 	private String phoneNumber;
 	private String accountNumber;
-	private List<Transaction> transactions = new ArrayList<>();
+	private List<Transaction> transactions;
 	private double balance;
 	private String address;
 	private DecimalFormat df = new DecimalFormat("0.00");
@@ -28,7 +28,7 @@ public class CurrentAccount {
 		this.phoneNumber = phoneNumber;
 		this.balance = 0.0;
 		this.accountNumber = new Bank().generateAccountNumber("CA"); //CA - Current Account
-		this.transactions = null;
+		this.transactions = new ArrayList<>();
 		this.address = address;
 	}
 
@@ -47,6 +47,11 @@ public class CurrentAccount {
 		return idNumber;
 	}
 
+	public UserAccounts getUserAccounts(Bank bank){
+		UserAccounts user = new UserAccounts().findWithCurrentAccount(this, bank);
+		return user;
+	}
+
 	public String getPhoneNumber()
 	{
 		return phoneNumber;
@@ -59,10 +64,7 @@ public class CurrentAccount {
 
 	public List<Transaction> getTransactions()
 	{
-		List<Transaction> list = transactions;
-		if(list == null || list.isEmpty())
-			list = new ArrayList<>();
-		return list;
+		return transactions;
 	}
 
 	public double getBalance()
@@ -88,8 +90,9 @@ public class CurrentAccount {
 		this.balance-=amount;
 	}
 
-	public void printTransactionList(){
+	public void printTransactionsList(){
 		int i = 0;
+		System.out.println("For you" + getFirstName() + " " + getLastName());
 		for (Transaction ts: getTransactions()){
 			i++;
 			System.out.println("Transaction " + (i) + " " + ts.toString());
@@ -98,14 +101,14 @@ public class CurrentAccount {
 
 	public void depositMoney(double deposit, String ref, CurrentAccount account){
 		account.addToBalance(deposit);
-		account.getTransactions().add(new Transaction(ref, deposit));
-		System.out.println("You have gained R" + df.format(deposit));
+		account.getTransactions().add(new Transaction(ref, deposit, "+"));
+		System.out.println(account.getFirstName() + ": You have gained R" + df.format(deposit));
 		System.out.println("Balance: " + account.getBalance());
 	}
 
 	public void withdrawMoney(double amount, String ref, CurrentAccount account){
 		account.subtractFromBalance(amount);
-		account.getTransactions().add(new Transaction(ref, amount));
+		account.getTransactions().add(new Transaction(ref, amount, "-"));
 	}
 
 	@Override
